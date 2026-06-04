@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ "Editar" if product else "Nuevo" }} producto | Mercurio Inventory{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Formulario</p>
+        <h2>{{ "Editar producto" if product else "Crear producto" }}</h2>
+    </div>
+</section>
+
+<section class="form-shell">
+    <form method="post" class="form-card">
+        <label>
+            <span>SKU</span>
+            <input type="text" name="sku" value="{{ product.sku if product else '' }}" {% if product %}readonly{% endif %} required>
+        </label>
+        <label>
+            <span>Nombre</span>
+            <input type="text" name="name" value="{{ product.name if product else '' }}" required>
+        </label>
+        <label>
+            <span>Descripción</span>
+            <textarea name="description" rows="4" required>{{ product.description if product else '' }}</textarea>
+        </label>
+        <div class="form-row">
+            <label>
+                <span>Precio</span>
+                <input type="number" name="price" min="0.01" step="0.01" value="{{ product.price if product else '' }}" required>
+            </label>
+            {% if not product %}
+                <label>
+                    <span>Stock inicial</span>
+                    <input type="number" name="stock" min="0" step="1" value="0" required>
+                </label>
+            {% endif %}
+        </div>
+        <label class="checkbox-field">
+            <input type="checkbox" name="is_active" {% if product is none or product.is_active %}checked{% endif %}>
+            <span>Producto activo</span>
+        </label>
+        <div class="toolbar">
+            <button class="button button-primary" type="submit">Guardar</button>
+            <a class="button button-secondary" href="{{ url_for('web.admin_products') }}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

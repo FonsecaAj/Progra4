@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Panel | Mercurio Inventory{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Panel administrativo</p>
+        <h2>Resumen operativo</h2>
+    </div>
+    <div class="toolbar">
+        <a class="button button-primary" href="{{ url_for('web.new_sale') }}">Nueva venta</a>
+        <a class="button button-secondary" href="{{ url_for('web.inventory_entry') }}">Registrar entrada</a>
+    </div>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card">
+        <p>Productos totales</p>
+        <strong>{{ summary.total_products }}</strong>
+        <span>{{ summary.active_products }} activos</span>
+    </article>
+    <article class="stat-card">
+        <p>Stock bajo</p>
+        <strong>{{ summary.low_stock_products }}</strong>
+        <span>Según umbral configurado</span>
+    </article>
+    <article class="stat-card">
+        <p>Ventas del día</p>
+        <strong>{{ summary.sales_today_count }}</strong>
+        <span>{{ summary.sales_today_total|currency }}</span>
+    </article>
+</section>
+
+<section class="dashboard-grid">
+    <article class="panel-card">
+        <div class="panel-card-header">
+            <div>
+                <p class="eyebrow">Productos</p>
+                <h3>Estado actual</h3>
+            </div>
+            <a class="text-link" href="{{ url_for('web.admin_products') }}">Gestionar</a>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Nombre</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.sku }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.stock }}</td>
+                        <td>{{ "Activo" if product.is_active else "Inactivo" }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">Todavía no hay productos.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+
+    <article class="panel-card">
+        <div class="panel-card-header">
+            <div>
+                <p class="eyebrow">Movimientos recientes</p>
+                <h3>Últimas operaciones</h3>
+            </div>
+            <a class="text-link" href="{{ url_for('web.inventory_exit') }}">Salida manual</a>
+        </div>
+        <div class="activity-list">
+            {% for movement in summary.recent_movements %}
+                <div class="activity-item">
+                    <div>
+                        <strong>{{ movement.product_sku }}</strong>
+                        <p>{{ movement.reason }}</p>
+                    </div>
+                    <div class="activity-meta">
+                        <span class="badge">{{ movement.movement_type }}</span>
+                        <span>{{ movement.quantity }} u.</span>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-inline">Aún no hay movimientos registrados.</p>
+            {% endfor %}
+        </div>
+    </article>
+    <article class="panel-card">
+        <div class="panel-card-header">
+            <div>
+                <p class="eyebrow">Ventas recientes</p>
+                <h3>Tickets rápidos</h3>
+            </div>
+        </div>
+        <div class="activity-list">
+            {% for sale in summary.recent_sales %}
+                <div class="activity-item">
+                    <div>
+                        <strong>{{ sale.product_name }}</strong>
+                        <p>{{ sale.quantity }} unidad(es) a {{ sale.unit_price|currency }}</p>
+                    </div>
+                    <div class="activity-meta">
+                        <span>{{ sale.total|currency }}</span>
+                    </div>
+                </div>
+            {% else %}
+                <p class="empty-inline">No hay ventas registradas todavía.</p>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ "Entrada" if operation == "entry" else "Salida" }} de inventario | Mercurio Inventory{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Inventario</p>
+        <h2>{{ "Registrar entrada" if operation == "entry" else "Registrar salida" }}</h2>
+    </div>
+</section>
+
+<section class="form-shell">
+    <form method="post" class="form-card">
+        <label>
+            <span>Producto</span>
+            <select name="sku" required>
+                <option value="">Selecciona un producto</option>
+                {% for product in products %}
+                    <option value="{{ product.sku }}">{{ product.sku }} · {{ product.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <div class="form-row">
+            <label>
+                <span>Cantidad</span>
+                <input type="number" name="quantity" min="1" step="1" required>
+            </label>
+            <label>
+                <span>Motivo</span>
+                <input type="text" name="reason" placeholder="Ajuste, compra, merma..." required>
+            </label>
+        </div>
+        <div class="toolbar">
+            <button class="button button-primary" type="submit">Guardar movimiento</button>
+            <a class="button button-secondary" href="{{ url_for('web.admin_dashboard') }}">Volver</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

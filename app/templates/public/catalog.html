@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Catálogo | Mercurio Inventory{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <p class="eyebrow">Catálogo público</p>
+        <h2>[INSERTAR TITULO]</h2>
+        <p>Consulta el catálogo y entra al panel cuando necesites actualizar la operación.</p>
+        <div class="hero-actions">
+            <a class="button button-primary" href="{{ url_for('web.admin_dashboard') }}">Abrir panel</a>
+            <a class="button button-secondary" href="{{ url_for('web.new_product') }}">Crear producto</a>
+        </div>
+    </div>
+    <aside class="hero-card">
+        <div class="hero-card-top">
+            <span class="hero-dot"></span>
+            <p class="eyebrow">Resumen</p>
+        </div>
+        <h3>{{ products|length }} producto(s) activo(s)</h3>
+        <div class="hero-card-stack compact">
+            <div>
+                <span>Disponibles</span>
+                <strong>{{ products|selectattr('stock', 'gt', 0)|list|length }} con stock</strong>
+            </div>
+            <div>
+                <span>Catálogo</span>
+                <strong>{{ products|selectattr('stock', 'equalto', 0)|list|length }} agotados</strong>
+            </div>
+        </div>
+    </aside>
+</section>
+
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Productos activos</p>
+        <h3>[INSERTAR TÍTULO]</h3>
+    </div>
+</section>
+
+<section class="product-grid">
+    {% for product in products %}
+    <article class="product-card">
+        <div class="product-card-top">
+            <span class="badge">{{ product.sku }}</span>
+            <span class="status {{ 'status-active' if product.stock > 0 else 'status-warning' }}">
+                {{ "Con stock" if product.stock > 0 else "Stock agotado" }}
+            </span>
+        </div>
+        <h4>{{ product.name }}</h4>
+        <p>{{ product.description }}</p>
+        <div class="product-card-bottom">
+            <strong>{{ product.price|currency }}</strong>
+            <span>{{ product.stock }} unidad(es)</span>
+        </div>
+    </article>
+    {% else %}
+    <article class="empty-state">
+        <h4>No hay productos activos todavía.</h4>
+        <p>Crea uno desde el panel para comenzar a poblar el catálogo.</p>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}

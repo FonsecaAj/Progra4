@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva venta | Mercurio Inventory{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Ventas rápidas</p>
+        <h2>Registrar venta</h2>
+    </div>
+</section>
+
+<section class="form-shell">
+    <form method="post" class="form-card">
+        <label>
+            <span>Producto</span>
+            <select name="sku" required>
+                <option value="">Selecciona un producto</option>
+                {% for product in products %}
+                    <option value="{{ product.sku }}">{{ product.sku }} · {{ product.name }} · {{ product.stock }} en stock</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            <span>Cantidad</span>
+            <input type="number" name="quantity" min="1" step="1" required>
+        </label>
+        <div class="toolbar">
+            <button class="button button-primary" type="submit">Registrar venta</button>
+            <a class="button button-secondary" href="{{ url_for('web.admin_dashboard') }}">Volver</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Historial {{ product.sku }} | Mercurio Inventory{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Historial de producto</p>
+        <h2>{{ product.name }}</h2>
+    </div>
+    <div class="toolbar">
+        <a class="button button-secondary" href="{{ url_for('web.admin_products') }}">Volver a productos</a>
+    </div>
+</section>
+
+<section class="panel-card">
+    <div class="inline-metrics">
+        <div>
+            <span class="eyebrow">SKU</span>
+            <strong>{{ product.sku }}</strong>
+        </div>
+        <div>
+            <span class="eyebrow">Stock actual</span>
+            <strong>{{ product.stock }}</strong>
+        </div>
+        <div>
+            <span class="eyebrow">Precio</span>
+            <strong>{{ product.price|currency }}</strong>
+        </div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+                <th>Motivo</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movement in movements %}
+                <tr>
+                    <td>{{ movement.movement_type }}</td>
+                    <td>{{ movement.quantity }}</td>
+                    <td>{{ movement.reason }}</td>
+                    <td>{{ movement.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No hay movimientos para este producto todavía.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

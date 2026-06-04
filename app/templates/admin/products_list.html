@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Productos | Mercurio Inventory{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+    <div>
+        <p class="eyebrow">Administración</p>
+        <h2>Productos</h2>
+    </div>
+    <div class="toolbar">
+        <a class="button button-primary" href="{{ url_for('web.new_product') }}">Nuevo producto</a>
+    </div>
+</section>
+
+<section class="panel-card">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.sku }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price|currency }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>{{ "Activo" if product.is_active else "Inactivo" }}</td>
+                    <td class="actions-cell">
+                        <a class="text-link" href="{{ url_for('web.edit_product', sku=product.sku) }}">Editar</a>
+                        <a class="text-link" href="{{ url_for('web.product_history', sku=product.sku) }}">Historial</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No hay productos registrados todavía.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
